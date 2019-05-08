@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<style>
+#map {
+    width: 960px;
+    height: 960px;
+}
+
+.county-borders {
+    fill: none;
+    stroke: black;
+    stroke-width: 0.5px;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+    pointer-events: none;
+}
+
+.select_name {
+    display: block;
+    font-size: 36px;
+    background: #fafdfe;
+    height: 60px;
+    width: 80px;
+    line-height: 28px;
+    border: 1px solid #9bc0dd;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    border-radius: 2px;
+}
+
+div.tooltip {
+    position: absolute;
+    text-align: center;
+    width: 200px;
+    height: 70px;
+    padding: 2px;
+    font-size: 24px;
+    background: white;
+    border: 0px;
+    border-radius: 8px;
+    pointer-events: none;
+}
+</style>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="https://d3js.org/topojson.v2.min.js"></script>
+<script>
+var name_index = [
+    { index: 21, name: "Íê" },
+    { index: 66, name: "¡÷" },
+    { index: 47, name: "¸S" },
+    { index: 135, name: "èà" },
+    { index: 60, name: "¿Ó" },
+    { index: 105, name: "Õı" },
+    { index: 111, name: "Ö«" },
+    { index: 69, name: "Ñ¢" },
+    { index: 17, name: "≤Ã" },
+    { index: 124, name: "óÓ" },
+    { index: 120, name: "‘S" },
+    { index: 139, name: "‡ç" },
+    { index: 116, name: "÷x" },
+    { index: 42, name: "∫È" },
+    { index: 19, name: "‘¯" },
+    { index: 40, name: "π˘" },
+    { index: 84, name: "«Ò" },
+    { index: 65, name: "¡Œ" },
+    { index: 119, name: "–Ï" },
+    { index: 56, name: "Ÿá" },
+    { index: 142, name: "÷‹" },
+    { index: 126, name: "»~" },
+    { index: 96, name: "ÃK" },
+    { index: 50, name: "Ω≠" },
+    { index: 74, name: "¡_" },
+    { index: 144, name: "«f" },
+    { index: 73, name: "ÖŒ" },
+    { index: 82, name: "≈Ì" },
+    { index: 41, name: "∫Œ" },
+    { index: 49, name: "∫Ü" }
+];
+
+// [{ index: 10, name: "∞≤" },{ index: 11, name: "∞Õ" },{ index: 12, name: "∞◊" },{ index: 13, name: "∞¸" },{ index: 14, name: "±¯" },{ index: 15, name: "≤Ω" },{ index: 16, name: "≤≈" },{ index: 18, name: "≤‹" },{ index: 20, name: "…Ú" },{ index: 22, name: "≥Ã" },{ index: 23, name: "¥˜" },{ index: 24, name: "‡á" },{ index: 25, name: "∂°" },{ index: 26, name: "∂≠" },{ index: 27, name: "∂≈" },{ index: 28, name: "∑∂" },{ index: 29, name: "∑Ω" },{ index: 30, name: "ÔL" },{ index: 31, name: "ÒT" },{ index: 32, name: "∏µ" },{ index: 33, name: "∏ " },{ index: 34, name: "∏ﬂ" },{ index: 35, name: "∏" },{ index: 36, name: "˝è" },{ index: 37, name: "π≈" },{ index: 38, name: "π»" },{ index: 39, name: "πŸ" },{ index: 43, name: "∫Ó" },{ index: 44, name: "∫˙" },{ index: 45, name: "»A" },{ index: 46, name: "ª∆" },{ index: 48, name: "ºo" },{ index: 51, name: "Ω™" },{ index: 52, name: " Y" },{ index: 53, name: "Ω" },{ index: 54, name: "øµ" },{ index: 55, name: "ø¬" },{ index: 57, name: "À{" },{ index: 58, name: "¿◊" },{ index: 59, name: "¿Ë" },{ index: 61, name: "ÿN" },{ index: 62, name: "¡¶" },{ index: 63, name: "ﬂB" },{ index: 64, name: "¡∫" },{ index: 67, name: "¡Ë" },{ index: 68, name: "¡Ù" },{ index: 70, name: "¡¯" },{ index: 71, name: "±R" },{ index: 72, name: "Íë" },{ index: 75, name: "ÒR" },{ index: 76, name: "ŸI" },{ index: 77, name: "˚ú" },{ index: 78, name: "√´" },{ index: 79, name: "ƒ¬" },{ index: 80, name: "öW" },{ index: 81, name: "≈À" },{ index: 83, name: "ÂX" },{ index: 85, name: "»´" },{ index: 86, name: "à" },{ index: 87, name: "»Ó" },{ index: 88, name: "…≥" },{ index: 89, name: "…€" },{ index: 90, name: " ©" },{ index: 91, name: " Ø" },{ index: 92, name: " ∑" },{ index: 93, name: "Àæ" },{ index: 94, name: "À…" },{ index: 95, name: "ÀŒ" },{ index: 97, name: "åO" },{ index: 98, name: "ú´" },{ index: 99, name: "Ã∆" },{ index: 100, name: "ÃÔ" },{ index: 101, name: "ÕØ" },{ index: 102, name: "ÉÚ" },{ index: 103, name: "Õø" },{ index: 104, name: "ÕÙ" },{ index: 106, name: "Œ∫" },{ index: 107, name: "Œ¬" },{ index: 108, name: "úÿ" },{ index: 109, name: "ŒÃ" },{ index: 110, name: "Œ◊" },{ index: 112, name: "ŒÈ" },{ index: 113, name: "Œ‰" },{ index: 114, name: "œƒ" },{ index: 115, name: " í" },{ index: 117, name: "–¡" },{ index: 118, name: "–“" },{ index: 121, name: "—¶" },{ index: 122, name: "ÓÅ" },{ index: 123, name: "á¿" },{ index: 125, name: "“¶" },{ index: 127, name: "“◊" },{ index: 128, name: "”»" },{ index: 129, name: "”Œ" },{ index: 130, name: "”‡" },{ index: 131, name: "”·" },{ index: 132, name: "‘¨" },{ index: 133, name: "’≥" },{ index: 134, name: "’≤" },{ index: 136, name: "èà∫Ü" },{ index: 137, name: "’¬" },{ index: 138, name: "⁄w" },{ index: 140, name: "ÊR" },{ index: 141, name: "Áä" },{ index: 143, name: "÷Ï" },{ index: 145, name: "◊ø" },{ index: 146, name: "◊⁄" }]
+
+var path = d3.geoPath();
+
+function max(num) {
+    return Math.max.apply(null, num);
+}
+d3.json("tw_county_topo.json", function(error, su) {
+    d3.json("tw_mercator_topo.json", function(error, us) {
+        if (error) throw error;
+        var div = d3.select("body").append("div")
+            .attr("class", "tooltip")
+            .style("opacity", 0);
+        var select = d3.select("body").append("select")
+            .attr("class", "select_name")
+            .on('change', onchange);
+        select.selectAll("option")
+            .data(name_index)
+            .enter().append("option")
+            .attr("value", function(d) {
+                return d.index;
+            })
+            .text(function(d) {
+                return d.name;
+            })
+
+
+        var svg = d3.select("body")
+            .append("svg")
+            .attr("id", "map");
+
+        var topo = topojson.feature(us, us.objects.tw_mercator).features;
+
+        var custom_domain = topo.map(function(item) {
+            return Object.values(item.properties)[21];
+        });
+
+        var max_ratio = max(custom_domain.filter(function(d) { return d != "NA" }).map(function(d) { return parseFloat(d) }))
+
+        var color = d3.scaleQuantile()
+            .domain(custom_domain)
+            .range(["rgb(247,252,253)", "rgb(224,236,244)", "rgb(191,211,230)", "rgb(158,188,218)", "rgb(140,150,198)", "rgb(140,107,177)", "rgb(136,65,157)", "rgb(110,1,107)"]);
+
+        var town = svg.append("g")
+            .attr("class", "towns")
+            .selectAll("path")
+            .data(topo)
+            .enter().append("path")
+            .attr("d", path)
+            .style("fill", function(d) {
+                var value = Object.values(d.properties
+)[21];
+                if (value != max_ratio) {
+                    return color(value);
+                } else if (value == max_ratio) {
+                    return "red"
+                } else {
+                    return "#ccc"
+                }
+            })
+            .on("mouseover", function(d) {
+                div.transition()
+                    .duration(200)
+                    .style("opacity", .9);
+                div.html(d.properties.COUNTY + d.properties.TOWN + "<br/>" + Object.values(d.properties)[21] + "%")
+                    .style("left", (d3.event.pageX) + "px")
+                    .style("top", (d3.event.pageY - 28) + "px");
+            })
+            .on("mouseout", function(d) {
+                div.transition()
+                    .duration(500)
+                    .style("opacity", 0);
+            });
+
+        svg.append("path")
+            .attr("class", "county-borders")
+            .attr("d", path(topojson.mesh(su, su.objects.tw_county, function(a, b) { return a !== b; })))
+
+        function onchange() {
+            var selectValue = parseInt(d3.select('select').property('value'))
+            var custom_domain = topo.map(function(item) {
+                return Object.values(item.properties)[selectValue];
+            });
+
+            var max_ratio = max(custom_domain.filter(function(d) { return d != "NA" }).map(function(d) { return parseFloat(d) }))
+            var color = d3.scaleQuantile()
+                .domain(custom_domain)
+                .range(["rgb(247,252,253)", "rgb(224,236,244)", "rgb(191,211,230)", "rgb(158,188,218)", "rgb(140,150,198)", "rgb(140,107,177)", "rgb(136,65,157)", "rgb(110,1,107)"]);
+
+            town.style("fill", function(d) {
+                    var value = Object.values(d.properties)[selectValue];
+                    if (value != "NA" & value != max_ratio) {
+                        return color(value);
+                    } else if (value == max_ratio) {
+                        return "red"
+                    } else {
+                        return "#ccc"
+                    }
+                })
+                .on("mouseover", function(d) {
+                    var value = Object.values(d.properties)[selectValue];
+                    if (value != "NA") {
+                        div.transition()
+                            .duration(200)
+                            .style("opacity", .9);
+                        div.html(d.properties.COUNTY + d.properties.TOWN + "<br/>" + Object.values(d.properties)[selectValue] + "%")
+                            .style("left", (d3.event.pageX) + "px")
+                            .style("top", (d3.event.pageY - 28) + "px");
+                    }
+                })
+                .on("mouseout", function(d) {
+                    var value = Object.values(d.properties)[selectValue];
+                    if (value != "NA") {
+                        div.transition()
+                            .duration(500)
+                            .style("opacity", 0);
+                    }
+                });
+        }
+    });
+});
+</script>
