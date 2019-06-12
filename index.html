@@ -121,25 +121,24 @@
 </head>
 
 <body>
-    <h1 align="center">台北市屋齡地圖</h1>
+    <h1 align="center">台灣姓氏地圖</h1>
     <img id="legend" src="姓氏地圖圖示.png">
     <div id="container">
         <svg id="map"></svg>
     </div>
     <div id="header">
-        <p>走在台北市，是不是常遇見不知道多少年歷史的老房子呢？想買房成家的你，是不是也想知道台北市各地區的屋齡水準呢？</p>
-        <p>以下的「台北市屋齡地圖」，利用<a href="http://data.taipei/opendata/datalist/datasetMeta?oid=c876ff02-af2e-4eb8-bd33-d444f5052733" target="_blank">台北市政府開放的全市建築物使用執照資料</a>，找出台北市20餘萬個門牌地址所在的建築物的屋齡，並將門牌地址轉成經緯度，繪製到地圖上，用視覺化的方式帶讀者了解台北市屋齡。</p>
+        <p>台灣姓氏百百款，「陳」、「林」、「黃」、「張」...，各種姓氏在台灣的分佈，不僅代表各大家族在台灣的足跡，更能一窺閩南、客家、外省、原住民等四大族群，在台灣開墾拓荒、開枝散葉的軌跡。</p>
+        <p>天下雜誌取得內政部<a href="https://data.moi.gov.tw/MoiOD/Data/DataDetail.aspx?oid=54BED408-2A7D-49D2-A247-FC63C156A8BB" target="_blank">「全國各鄉鎮市區前二十大姓人口」</a>資料，分析全台總人數前三十多的姓氏在台灣各地的分佈情況，繪製成互動地圖。</p>
         <p>使用說明：
             <ul>
-                <li>從選單中選擇行政區</li>
-                <li>點擊圖例的不同顏色方塊，可以篩選地圖要呈現哪些屋齡區間的建築</li>
-                <li>用滑鼠滾輪或手機手勢拖拉放大縮小地圖</li>
+                <li>點擊選單選擇姓氏</li>
+                <li>滑鼠或手機螢幕點擊可看各鄉鎮市區該姓氏人口佔比</li>
             </ul>
         </p>
     </div>
     <div id="footer">
-        <p>本地圖使用的原始資料和程式碼已上傳<a href="https://github.com/imdataman/taipei-house-age-map" target="_blank">Github</a>。作者：<a href="https://www.facebook.com/imDataMan/" target="_blank">林佳賢</a>。</p>
-        <p>註：約2000個門牌地址無法轉換，轉換成功率約99%。無法轉換的門牌主要位在天母、社子兩個地區，原因是舊地址無法轉新地址。</p>
+        <p>本地圖使用的原始資料和程式碼已上傳<a href="https://github.com/imdataman/tw-family-names" target="_blank">Github</a>。作者：<a href="https://www.facebook.com/imDataMan/" target="_blank">林佳賢</a>。</p>
+        <p>註：原始資料統計各鄉鎮市區前二十大姓人口，前二十名以外姓氏人口數無統計資料，整個資料涵蓋的人數為1704萬人。</p>
     </div>
     <script src="https://d3js.org/d3.v4.min.js"></script>
     <script src="https://d3js.org/topojson.v2.min.js"></script>
